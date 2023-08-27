@@ -8,13 +8,13 @@ In Hats Protocol v1, eligibility and toggle modules are set as addresses. This c
 
 Passthrough Module is a contract that can be set as the eligibility and/or toggle module for a target hat, and allows the wearer(s) of another hat to call the eligibility and/or toggle functions of the target hat. This allows hats themselves to be used as eligibility and toggle modules.
 
-This contract is a "humanistic" module, not a "mechanistic" module. It does not inherit from `IHatsEligibility.sol` or `IHatsToggle.sol`, so Hats Protocol cannot pull any data from it. It serves only as a passthrough, enabling the wearer(s) of the authorized hat to push eligibility and toggle data about the target hat to Hats Protocol. 
+This contract is a "humanistic" module, not a "mechanistic" module. It does not inherit from `IHatsEligibility.sol` or `IHatsToggle.sol`, so Hats Protocol cannot pull any data from it. It serves only as a passthrough, enabling the wearer(s) of the authorized hat to push eligibility and toggle data about the target hat to Hats Protocol.
 
 ### Passthrough Eligibility
 
 To use Passthrough Module as the eligibility module for a target hat, set Passthrough Module's address as the target hat's eligibility address.
 
-Then, the wearer(s) of Passthrough Module's authorized hat can call the `PassthroughEligibility.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push eligibility data to Hats Protocol. 
+Then, the wearer(s) of Passthrough Module's authorized hat can call the `PassthroughEligibility.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push eligibility data to Hats Protocol.
 
 ### Passthrough Toggle
 
