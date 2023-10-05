@@ -69,12 +69,12 @@ contract WithInstanceTest is PassthroughModuleTest {
     vm.stopPrank();
 
     // we don't have any init args or immutable args
-    otherImmutableArgs;
+    otherImmutableArgs = abi.encodePacked(moduleHat);
     initArgs;
 
     // deploy an instance of the module
     instance =
-      PassthroughModule(deployModuleInstance(factory, address(implementation), moduleHat, otherImmutableArgs, initArgs));
+      PassthroughModule(deployModuleInstance(factory, address(implementation), 0, otherImmutableArgs, initArgs));
   }
 
   modifier caller_(address _caller) {
@@ -107,7 +107,11 @@ contract Deployment is WithInstanceTest {
   }
 
   function test_hatId() public {
-    assertEq(instance.hatId(), moduleHat);
+    assertEq(instance.hatId(), 0);
+  }
+
+  function test_criterionHat() public {
+    assertEq(instance.CRITERION_HAT(), moduleHat);
   }
 }
 
