@@ -15,9 +15,9 @@ error NotAuthorized();
  * @title PassthroughModule
  * @author spengrah
  * @author Haberdasher Labs
- * @notice This module allows the wearer(s) of a given hat to serve as the eligibilty and/or toggle module for a
- * different hat. It effectively serves as an extension of a hat, enabling the hat itself to serve as the module even
- * though only addresses can be set as modules.
+ * @notice This module allows the wearer(s) of a given "criterion" hat to serve as the eligibilty and/or toggle module
+ * for a different hat. It effectively serves as an extension of a hat, enabling the hat itself to serve as the module
+ * even though only addresses can be set as modules.
  * @dev This contract inherits from HatsModule, and is intended to be deployed as minimal proxy clone(s) via
  * HatsModuleFactory. For this contract to be used, it must be set as either the eligibility or toggle module for
  * another hat.
@@ -45,8 +45,13 @@ contract PassthroughModule is HatsModule {
    * 0       | IMPLEMENTATION    | address | 20      | HatsModule          |
    * 20      | HATS              | address | 20      | HatsModule          |
    * 40      | hatId             | uint256 | 32      | HatsModule          |
+   * 72      | CRITERION_HAT     | uint256 | 32      | PassthroughModule   |
    * ----------------------------------------------------------------------+
    */
+
+  function CRITERION_HAT() public pure returns (uint256) {
+    return _getArgUint256(72);
+  }
 
   /*//////////////////////////////////////////////////////////////
                             CONSTRUCTOR
@@ -103,7 +108,7 @@ contract PassthroughModule is HatsModule {
 
   /// @notice Reverts if the caller is not wearing the {hatId} hat
   modifier onlyWearer() {
-    if (!HATS().isWearerOfHat(msg.sender, hatId())) revert NotAuthorized();
+    if (!HATS().isWearerOfHat(msg.sender, CRITERION_HAT())) revert NotAuthorized();
     _;
   }
 }

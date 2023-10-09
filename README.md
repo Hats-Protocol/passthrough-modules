@@ -1,6 +1,6 @@
 # Passthrough Module
 
-A [Hats Protocol](https://github.com/hats-protocol/hats-protocol) module that enables an authorized hat to serve as the eligibility and/or toggle module for other hat(s).
+A [Hats Protocol](https://github.com/hats-protocol/hats-protocol) module that enables an authorized "criterion" hat to serve as the eligibility and/or toggle module for other hat(s).
 
 ## Overview and Usage
 
@@ -14,13 +14,13 @@ This contract is a "humanistic" module, not a "mechanistic" module. It does not 
 
 To use Passthrough Module as the eligibility module for a target hat, set Passthrough Module's address as the target hat's eligibility address.
 
-Then, the wearer(s) of Passthrough Module's authorized hat can call the `PassthroughEligibility.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push eligibility data to Hats Protocol.
+Then, the wearer(s) of Passthrough Module's authorized `CRITERION_HAT` can call the `PassthroughEligibility.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push eligibility data to Hats Protocol.
 
 ### Passthrough Toggle
 
 To use Passthrough Module as the toggle module for a target hat, set Passthrough Module's address as the target hat's toggle address.
 
-Then, the wearer(s) of Passthrough Module's authorized hat can call the `PassthroughToggle.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push toggle data to Hats Protocol.
+Then, the wearer(s) of Passthrough Module's authorized `CRITERION_HAT` can call the `PassthroughToggle.setHatWearerStatus()` function — which is a thin wrapper around `Hats.setHatWearerStatus()` — to push toggle data to Hats Protocol.
 
 ## Development
 
