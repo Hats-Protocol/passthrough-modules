@@ -42,7 +42,7 @@ contract Deploy is Script {
      *       never differs regardless of where its being compiled
      *    2. The provided salt, `SALT`
      */
-    implementation = new PassthroughModule{ salt: SALT}(_version /* insert constructor args here */);
+    implementation = new PassthroughModule{ salt: SALT }(_version /* insert constructor args here */ );
 
     vm.stopBroadcast();
 
