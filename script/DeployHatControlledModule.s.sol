@@ -2,15 +2,15 @@
 pragma solidity ^0.8.19;
 
 import { Script, console2 } from "forge-std/Script.sol";
-import { PassthroughModule } from "../src/PassthroughModule.sol";
+import { HatControlledModule } from "../src/HatControlledModule.sol";
 
 contract Deploy is Script {
-  PassthroughModule public implementation;
+  HatControlledModule public implementation;
   bytes32 public constant SALT = bytes32(abi.encode(0x4a75)); // ~ H(4) A(a) T(7) S(5)
 
   // default values
   bool internal _verbose = true;
-  string internal _version = "0.0.1"; // increment this with each new deployment
+  string internal _version = "0.1.0"; // initial version for HatControlledModule
 
   /// @dev Override default values, if desired
   function prepare(bool verbose, string memory version) public {
@@ -34,15 +34,7 @@ contract Deploy is Script {
   function run() public virtual {
     vm.startBroadcast(deployer());
 
-    /**
-     * @dev Deploy the contract to a deterministic address via forge's create2 deployer factory, which is at this
-     * address on all chains: `0x4e59b44847b379578588920cA78FbF26c0B4956C`.
-     * The resulting deployment address is determined by only two factors:
-     *    1. The bytecode hash of the contract to deploy. Setting `bytecode_hash` to "none" in foundry.toml ensures that
-     *       never differs regardless of where its being compiled
-     *    2. The provided salt, `SALT`
-     */
-    implementation = new PassthroughModule{ salt: SALT}(_version /* insert constructor args here */);
+    implementation = new HatControlledModule{ salt: SALT }(_version);
 
     vm.stopBroadcast();
 
@@ -50,37 +42,19 @@ contract Deploy is Script {
   }
 }
 
-/// @dev Deploy pre-compiled ir-optimized bytecode to a non-deterministic address
-contract DeployPrecompiled is Deploy {
-  /// @dev Update SALT and default values in Deploy contract
-
-  function run() public override {
-    vm.startBroadcast(deployer());
-
-    bytes memory args = abi.encode( /* insert constructor args here */ );
-
-    /// @dev Load and deploy pre-compiled ir-optimized bytecode.
-    implementation = PassthroughModule(deployCode("optimized-out/Module.sol/Module.json", args));
-
-    vm.stopBroadcast();
-
-    _log("Precompiled ");
-  }
-}
-
 /* FORGE CLI COMMANDS
 
 ## A. Simulate the deployment locally
-forge script script/Deploy.s.sol -f mainnet
+forge script script/DeployHatControlledModule.s.sol -f mainnet
 
 ## B. Deploy to real network and verify on etherscan
-forge script script/Deploy.s.sol -f mainnet --broadcast --verify
+forge script script/DeployHatControlledModule.s.sol -f mainnet --broadcast --verify
 
 ## C. Fix verification issues (replace values in curly braces with the actual values)
 forge verify-contract --chain-id 1 --num-of-optimizations 1000000 --watch --constructor-args $(cast abi-encode \
- "constructor({args})" "{arg1}" "{arg2}" "{argN}" ) \ 
+ "constructor(string)" "_version") \ 
  --compiler-version v0.8.19 {deploymentAddress} \
- src/{Counter}.sol:{Counter} --etherscan-api-key $ETHERSCAN_KEY
+ src/HatControlledModule.sol:HatControlledModule --etherscan-api-key $ETHERSCAN_KEY
 
 ## D. To verify ir-optimized contracts on etherscan...
   1. Run (C) with the following additional flag: `--show-standard-json-input > etherscan.json`
