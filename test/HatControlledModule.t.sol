@@ -62,6 +62,13 @@ contract WithInstanceTest is HatControlledModuleTest {
     );
   }
 
+  function assertWearerStatus(address _wearer, uint256 _hatId, bool _eligible, bool _standing) public view {
+    (bool eligible, bool standing) = instance.getWearerStatus(_wearer, _hatId);
+    assertEq(standing, _standing);
+    if (_standing) assertEq(eligible, _eligible);
+    else assertFalse(eligible);
+  }
+
   modifier caller_(address _caller) {
     caller = _caller;
     vm.prank(caller);
@@ -104,9 +111,7 @@ contract Eligibility is WithInstanceTest {
     vm.prank(controller);
     instance.setWearerStatus(_wearer, _hatId, _eligible, _standing);
 
-    (bool eligible, bool standing) = instance.getWearerStatus(_wearer, _hatId);
-    assertEq(eligible, _eligible);
-    assertEq(standing, _standing);
+    assertWearerStatus(_wearer, _hatId, _eligible, _standing);
 
     // set the same wearer's status for a different hat
     uint256 differentHat = uint256(keccak256(abi.encodePacked(_hatId)));
@@ -114,9 +119,7 @@ contract Eligibility is WithInstanceTest {
     vm.prank(controller);
     instance.setWearerStatus(_wearer, differentHat, _eligible, _standing);
 
-    (eligible, standing) = instance.getWearerStatus(_wearer, differentHat);
-    assertEq(eligible, _eligible);
-    assertEq(standing, _standing);
+    assertWearerStatus(_wearer, differentHat, _eligible, _standing);
 
     // set a different wearer's status for the first hat
     address otherWearer = address(bytes20(keccak256(abi.encodePacked(_wearer))));
@@ -124,15 +127,11 @@ contract Eligibility is WithInstanceTest {
     vm.prank(controller);
     instance.setWearerStatus(otherWearer, _hatId, _eligible, _standing);
 
-    (eligible, standing) = instance.getWearerStatus(otherWearer, _hatId);
-    assertEq(eligible, _eligible);
-    assertEq(standing, _standing);
+    assertWearerStatus(otherWearer, _hatId, _eligible, _standing);
   }
 
   function test_default() public view {
-    (bool eligible, bool standing) = instance.getWearerStatus(wearer, targetHat);
-    assertTrue(eligible);
-    assertTrue(standing);
+    assertWearerStatus(wearer, targetHat, true, true);
   }
 
   function test_revert_nonController_cannotSetWearerStatus() public {

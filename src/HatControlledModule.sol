@@ -114,7 +114,12 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
   /// @inheritdoc HatsEligibilityModule
   function getWearerStatus(address _wearer, uint256 _hatId) public view override returns (bool eligible, bool standing) {
     IneligibilityData memory data = wearerIneligibility[_hatId][_wearer];
-    return (!data.ineligible, !data.badStanding);
+    // bad standing means not eligible, as well
+    if (data.badStanding) return (false, false);
+    // good standing but ineligible
+    if (data.ineligible) return (false, true);
+    // eligible and in good standing
+    return (true, true);
   }
 
   /*//////////////////////////////////////////////////////////////
