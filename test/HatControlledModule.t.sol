@@ -35,6 +35,9 @@ contract HatControlledModuleTest is Deploy, Test {
 
   string public MODULE_VERSION;
 
+  event WearerStatusSet(address wearer, uint256 hatId, bool eligible, bool standing);
+  event HatStatusSet(uint256 hatId, bool active);
+
   function setUp() public virtual {
     fork = vm.createSelectFork(vm.rpcUrl("mainnet"), BLOCK_NUMBER);
 
@@ -130,6 +133,13 @@ contract Eligibility is WithInstanceTest {
     assertWearerStatus(otherWearer, _hatId, _eligible, _standing);
   }
 
+  function test_emit_WearerStatusSet(address _wearer, uint256 _hatId, bool _eligible, bool _standing) public {
+    vm.expectEmit(true, true, true, true);
+    emit WearerStatusSet(_wearer, _hatId, _eligible, _standing);
+    vm.prank(controller);
+    instance.setWearerStatus(_wearer, _hatId, _eligible, _standing);
+  }
+
   function test_default() public view {
     assertWearerStatus(wearer, targetHat, true, true);
   }
@@ -155,6 +165,13 @@ contract Toggle is WithInstanceTest {
     instance.setHatStatus(differentHat, _status);
 
     assertEq(instance.getHatStatus(differentHat), _status);
+  }
+
+  function test_emit_HatStatusSet(uint256 _hatId, bool _status) public {
+    vm.expectEmit(true, true, true, true);
+    emit HatStatusSet(_hatId, _status);
+    vm.prank(controller);
+    instance.setHatStatus(_hatId, _status);
   }
 
   function test_default() public view {

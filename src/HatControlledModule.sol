@@ -24,6 +24,13 @@ error NotAuthorized();
  */
 contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
   /*//////////////////////////////////////////////////////////////
+                            EVENTS
+  //////////////////////////////////////////////////////////////*/
+
+  event WearerStatusSet(address wearer, uint256 hatId, bool eligible, bool standing);
+  event HatStatusSet(uint256 hatId, bool active);
+
+  /*//////////////////////////////////////////////////////////////
                             DATA MODELS
   //////////////////////////////////////////////////////////////*/
 
@@ -109,6 +116,7 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
    */
   function setWearerStatus(address _wearer, uint256 _hatId, bool _eligible, bool _standing) public onlyController {
     wearerIneligibility[_hatId][_wearer] = IneligibilityData(!_eligible, !_standing);
+    emit WearerStatusSet(_wearer, _hatId, _eligible, _standing);
   }
 
   /// @inheritdoc HatsEligibilityModule
@@ -136,6 +144,7 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
    */
   function setHatStatus(uint256 _hatId, bool _newStatus) public onlyController {
     hatInactivity[_hatId] = !_newStatus;
+    emit HatStatusSet(_hatId, _newStatus);
   }
 
   /// @inheritdoc HatsToggleModule
