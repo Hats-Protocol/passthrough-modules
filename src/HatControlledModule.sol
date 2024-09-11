@@ -66,10 +66,10 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
    * 0       | IMPLEMENTATION    | address | 20      | HatsModule          |
    * 20      | HATS              | address | 20      | HatsModule          |
    * 40      | hatId             | uint256 | 32      | HatsModule          |
-   * 72      | CRITERION_HAT     | uint256 | 32      | PassthroughModule   |
+   * 72      | CONTROLLER_HAT    | uint256 | 32      | HatControlledModule |
    * ----------------------------------------------------------------------+
    */
-  function CRITERION_HAT() public pure returns (uint256) {
+  function CONTROLLER_HAT() public pure returns (uint256) {
     return _getArgUint256(72);
   }
 
@@ -158,7 +158,7 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
 
   /// @notice Reverts if the caller is not wearing the {hatId} hat
   modifier onlyController() {
-    if (!HATS().isWearerOfHat(msg.sender, CRITERION_HAT())) revert NotAuthorized();
+    if (!HATS().isWearerOfHat(msg.sender, CONTROLLER_HAT())) revert NotAuthorized();
     _;
   }
 }

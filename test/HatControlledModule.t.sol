@@ -25,7 +25,7 @@ contract HatControlledModuleTest is Deploy, Test {
 
   uint256 public tophat;
   uint256 public targetHat;
-  uint256 public criterionHat;
+  uint256 public controllerHat;
 
   address public caller;
   address public controller = makeAddr("controller");
@@ -53,11 +53,11 @@ contract WithInstanceTest is HatControlledModuleTest {
     tophat = HATS.mintTopHat(org, "org's tophat", "");
     vm.startPrank(org);
     targetHat = HATS.createHat(tophat, "target hat", 2, address(999), address(999), true, "");
-    criterionHat = HATS.createHat(tophat, "criterion hat", 2, address(999), address(999), true, "");
-    HATS.mintHat(criterionHat, controller);
+    controllerHat = HATS.createHat(tophat, "controller hat", 2, address(999), address(999), true, "");
+    HATS.mintHat(controllerHat, controller);
     vm.stopPrank();
 
-    otherImmutableArgs = abi.encodePacked(criterionHat);
+    otherImmutableArgs = abi.encodePacked(controllerHat);
     initArgs;
 
     instance = HatControlledModule(
@@ -103,8 +103,8 @@ contract Deployment is WithInstanceTest {
     assertEq(instance.hatId(), 0);
   }
 
-  function test_criterionHat() public view {
-    assertEq(instance.CRITERION_HAT(), criterionHat);
+  function test_controllerHat() public view {
+    assertEq(instance.CONTROLLER_HAT(), controllerHat);
   }
 }
 
