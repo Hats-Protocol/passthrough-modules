@@ -10,7 +10,7 @@ contract Deploy is Script {
 
   // default values
   bool internal _verbose = true;
-  string internal _version = "0.0.1"; // increment this with each new deployment
+  string internal _version = "0.0.2"; // increment this with each new deployment
 
   /// @dev Override default values, if desired
   function prepare(bool verbose, string memory version) public {
@@ -42,7 +42,7 @@ contract Deploy is Script {
      *       never differs regardless of where its being compiled
      *    2. The provided salt, `SALT`
      */
-    implementation = new PassthroughModule{ salt: SALT}(_version /* insert constructor args here */);
+    implementation = new PassthroughModule{ salt: SALT }(_version /* insert constructor args here */ );
 
     vm.stopBroadcast();
 

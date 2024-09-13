@@ -48,7 +48,6 @@ contract PassthroughModule is HatsModule {
    * 72      | CRITERION_HAT     | uint256 | 32      | PassthroughModule   |
    * ----------------------------------------------------------------------+
    */
-
   function CRITERION_HAT() public pure returns (uint256) {
     return _getArgUint256(72);
   }
