@@ -16,7 +16,7 @@ error NotAuthorized();
  * @title HatControlledModule
  * @author spengrah
  * @author Haberdasher Labs
- * @notice This module allows the wearer(s) of a given "criterion" hat to serve as the eligibilty and/or toggle module
+ * @notice This module allows the wearer(s) of a given "controller" hat to serve as the eligibilty and/or toggle module
  * for a different hat. It is compatible with module chaining.
  * @dev This contract inherits from HatsModule, and is intended to be deployed as minimal proxy clone(s) via
  * HatsModuleFactory. For this contract to be used, it must be set as either the eligibility or toggle module for
@@ -27,7 +27,10 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
                             EVENTS
   //////////////////////////////////////////////////////////////*/
 
+  /// @notice Emitted when the wearer status is set
   event WearerStatusSet(address wearer, uint256 hatId, bool eligible, bool standing);
+
+  /// @notice Emitted when the hat status is set
   event HatStatusSet(uint256 hatId, bool active);
 
   /*//////////////////////////////////////////////////////////////
@@ -69,6 +72,8 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
    * 72      | CONTROLLER_HAT    | uint256 | 32      | HatControlledModule |
    * ----------------------------------------------------------------------+
    */
+
+  /// @notice The hat that controls this module instance and can set wearer and hat statuses
   function CONTROLLER_HAT() public pure returns (uint256) {
     return _getArgUint256(72);
   }
