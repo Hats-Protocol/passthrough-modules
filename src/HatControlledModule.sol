@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 // import { console2 } from "forge-std/Test.sol"; // remove before deploy
 import { HatsEligibilityModule, HatsModule } from "hats-module/HatsEligibilityModule.sol";
-import { HatsToggleModule } from "hats-module/HatsToggleModule.sol";
+import { IHatsToggle } from "hats-module/HatsToggleModule.sol";
 
 /*//////////////////////////////////////////////////////////////
                             CUSTOM ERRORS
@@ -22,7 +22,7 @@ error NotAuthorized();
  * HatsModuleFactory. For this contract to be used, it must be set as either the eligibility or toggle module for
  * another hat.
  */
-contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
+contract HatControlledModule is HatsEligibilityModule, IHatsToggle {
   /*//////////////////////////////////////////////////////////////
                             EVENTS
   //////////////////////////////////////////////////////////////*/
@@ -152,7 +152,7 @@ contract HatControlledModule is HatsEligibilityModule, HatsToggleModule {
     emit HatStatusSet(_hatId, _newStatus);
   }
 
-  /// @inheritdoc HatsToggleModule
+  /// @inheritdoc IHatsToggle
   function getHatStatus(uint256 _hatId) public view override returns (bool active) {
     return !hatInactivity[_hatId];
   }
