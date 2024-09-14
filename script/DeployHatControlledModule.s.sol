@@ -6,7 +6,7 @@ import { HatControlledModule } from "../src/HatControlledModule.sol";
 
 contract Deploy is Script {
   HatControlledModule public implementation;
-  bytes32 public constant SALT = bytes32(abi.encode(0x4a75)); // ~ H(4) A(a) T(7) S(5)
+  bytes32 public constant SALT = bytes32(abi.encode(0x4a76));
 
   // default values
   bool internal _verbose = true;
